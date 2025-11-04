@@ -1,5 +1,6 @@
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import kalaashikha from '@/images/kalaashiksha.jpeg';
 
 export function Hero() {
   const scrollToSection = (id: string) => {
@@ -53,7 +54,7 @@ export function Hero() {
           <div className="relative">
             <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1579018371841-0f7e275dd50f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb3V0aCUyMGluZGlhbiUyMHRyYWRpdGlvbmFsJTIwbXVzaWMlMjBpbnN0cnVtZW50c3xlbnwxfHx8fDE3NjEyMzkwMjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src={kalaashikha}
                 alt="South Indian traditional music instruments"
                 className="w-full h-full object-cover"
               />
