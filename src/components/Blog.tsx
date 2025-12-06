@@ -80,7 +80,6 @@ export function Blog() {
 
           {/* Upcoming Articles */}
           <div>
-            <h3 className="text-gray-900 mb-6">Upcoming Articles</h3>
             <div className="grid md:grid-cols-2 gap-6">
               {articles.slice(1).map((article, index) => {
                 const Icon = article.icon;
