@@ -76,35 +76,70 @@ export function Plans() {
             ))}
           </div>
 
-          {/* Accelerated Pack */}
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 md:p-12">
-            <div className="max-w-3xl mx-auto">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-purple-200 flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-purple-700" />
+          {/* Accelerated + Regular Packs (side-by-side) */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Regular Pack - left (pink) */}
+            <div className="bg-gradient-to-br from-pink-50 to-white rounded-2xl p-8 md:p-12 border border-pink-100">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center">
+                    <div className="text-pink-600 text-lg">✅</div>
+                  </div>
+                  <div>
+                    <h3 className="text-pink-800 mb-2">🌟 Regular Pack (Recommended)</h3>
+                    <p className="text-pink-700">📘 Balanced learning at 1 class per week — steady, sustainable progress.</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-purple-800 mb-2">🌟 Accelerated Pack (Optional)</h3>
-                  <p className="text-purple-700">🚀 Want to learn faster? Choose 2 classes per week for quicker progress.</p>
-                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {[
+                    "Included with all class packs (Demo / 4 / 10 / 20)",
+                    "Best for busy schedules and steady progress",
+                    "Time to practice and absorb between classes"
+                  ].map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-3 text-gray-700">
+                      <Check className="w-5 h-5 text-pink-500 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button className="bg-pink-600 hover:bg-pink-700">
+                  👉 Choose Regular Pack
+                </Button>
               </div>
+            </div>
 
-              <ul className="space-y-3 mb-6">
-                {[
-                  "Available for 4, 10, or 20 class packs",
-                  "Flexible scheduling possible",
-                  "Faster progress with 2 classes per week"
-                ].map((feature, idx) => (
-                  <li key={idx} className="flex items-center gap-3 text-gray-700">
-                    <Check className="w-5 h-5 text-purple-600 flex-shrink-0" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Accelerated Pack - right (purple) */}
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 md:p-12 border border-purple-100">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-purple-200 flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-purple-700" />
+                  </div>
+                  <div>
+                    <h3 className="text-purple-800 mb-2">🌟 Accelerated Pack (Optional)</h3>
+                    <p className="text-purple-700">🚀 Want to learn faster? Choose 2 classes per week for quicker progress.</p>
+                  </div>
+                </div>
 
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                👉 Choose Accelerated Pack
-              </Button>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    "Available for 4, 10, or 20 class packs",
+                    "Flexible scheduling possible",
+                    "Faster progress with 2 classes per week"
+                  ].map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-3 text-gray-700">
+                      <Check className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button className="bg-purple-600 hover:bg-purple-700">
+                  👉 Choose Accelerated Pack
+                </Button>
+              </div>
             </div>
           </div>
         </div>
