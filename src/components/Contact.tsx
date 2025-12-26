@@ -1,10 +1,84 @@
 import { Mail, Instagram, Send } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { send, init } from '@emailjs/browser';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Card } from './ui/card';
 
 export function Contact() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [sent, setSent] = useState(false);
+
+  const validateEmail = (value: string) => {
+    // simple email regex
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  };
+
+  const handleSend = () => {
+    setEmailError('');
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_EMAILJS_USER;
+
+    const templateParams = {
+      from_name: name || 'Website Visitor',
+      from_email: email,
+      message: message || '',
+    };
+
+    console.log('EmailJS params', { serviceId, templateId, publicKey, templateParams });
+
+    if (serviceId && templateId && publicKey) {
+      // send via EmailJS
+      send(serviceId, templateId, templateParams, publicKey)
+        .then(() => {
+          setSent(true);
+        })
+        .catch((err) => {
+          console.error('EmailJS send error', err);
+          setEmailError('Failed to send message. Please try again or use your email client.');
+        });
+      return;
+    }
+
+    // Fallback to mailto if EmailJS is not configured
+    const to = 'kalaashiksha@gmail.com';
+    const subject = `Contact from ${name || 'Website Visitor'}`;
+    const bodyLines = [] as string[];
+    bodyLines.push(`Name: ${name || ''}`);
+    bodyLines.push(`Email: ${email}`);
+    bodyLines.push('');
+    bodyLines.push('Message:');
+    bodyLines.push(message || '');
+    bodyLines.push('');
+    bodyLines.push('— Sent from Kalashiksha website');
+
+    const body = encodeURIComponent(bodyLines.join('\n'));
+    const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${body}`;
+    window.location.href = mailto;
+    setSent(true);
+  };
+
+  useEffect(() => {
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_EMAILJS_USER;
+    if (publicKey) init(publicKey);
+  }, []);
+
+  useEffect(() => {
+    if (!sent) return;
+    const t = setTimeout(() => setSent(false), 4000);
+    return () => clearTimeout(t);
+  }, [sent]);
+
   return (
     <section id="contact" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
@@ -83,15 +157,23 @@ export function Contact() {
             {/* Contact Form */}
             <Card className="p-8 border-pink-100">
               <h3 className="text-gray-900 mb-6">Get in Touch</h3>
-              <form className="space-y-6">
+              <form
+                className="space-y-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend();
+                }}
+              >
                 <div>
                   <label htmlFor="name" className="block text-gray-700 mb-2">
                     Name
                   </label>
-                  <Input 
-                    id="name" 
-                    placeholder="Your name" 
+                  <Input
+                    id="name"
+                    placeholder="Your name"
                     className="border-pink-200 focus:border-pink-400"
+                    value={name}
+                    onChange={(e: any) => setName(e.target.value)}
                   />
                 </div>
 
@@ -99,30 +181,41 @@ export function Contact() {
                   <label htmlFor="email" className="block text-gray-700 mb-2">
                     Email
                   </label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="your@email.com" 
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your@email.com"
                     className="border-pink-200 focus:border-pink-400"
+                    value={email}
+                    onChange={(e: any) => setEmail(e.target.value)}
                   />
+                  {emailError && (
+                    <p className="text-sm text-red-600 mt-2">{emailError}</p>
+                  )}
                 </div>
 
                 <div>
                   <label htmlFor="message" className="block text-gray-700 mb-2">
                     Message
                   </label>
-                  <Textarea 
-                    id="message" 
+                  <Textarea
+                    id="message"
                     placeholder="Tell us about your musical journey or ask us anything..."
                     rows={5}
                     className="border-pink-200 focus:border-pink-400"
+                    value={message}
+                    onChange={(e: any) => setMessage(e.target.value)}
                   />
                 </div>
 
-                <Button className="w-full bg-pink-600 hover:bg-pink-700">
+                <Button className="w-full bg-pink-600 hover:bg-pink-700" type="submit">
                   <Send className="w-4 h-4 mr-2" />
                   Send Message
                 </Button>
+
+                {sent && (
+                  <p className="text-sm text-green-600">Thanks for the email, will revert back soon</p>
+                )}
               </form>
             </Card>
           </div>

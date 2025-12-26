@@ -104,10 +104,10 @@ export function Courses() {
               All classes are online (Zoom/Google Meet). Each session is 45 minutes.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button onClick={() => scrollToSection('pricing')} className="bg-pink-600 hover:bg-pink-700">
+              <Button onClick={() => scrollToSection('plans')} className="bg-pink-600 hover:bg-pink-700">
                 👉 Book a Free Demo
               </Button>
-              <Button onClick={() => scrollToSection('pricing')} variant="outline" className="border-pink-600 text-pink-600 hover:bg-pink-50">
+              <Button onClick={() => scrollToSection('plans')} variant="outline" className="border-pink-600 text-pink-600 hover:bg-pink-50">
                 Register Now
               </Button>
             </div>

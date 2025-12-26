@@ -31,18 +31,15 @@ export function Header() {
             <button onClick={() => scrollToSection('courses')} className="text-gray-700 hover:text-pink-600 transition-colors">
               Courses
             </button>
-            <button onClick={() => scrollToSection('pricing')} className="text-gray-700 hover:text-pink-600 transition-colors">
-              Pricing
+            <button onClick={() => scrollToSection('plans')} className="text-gray-700 hover:text-pink-600 transition-colors">
+              Plans
             </button>
             <button onClick={() => scrollToSection('blog')} className="text-gray-700 hover:text-pink-600 transition-colors">
-              Articles
+              Blog
             </button>
             <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-pink-600 transition-colors">
               Contact
             </button>
-            <Button onClick={() => scrollToSection('pricing')} className="bg-pink-600 hover:bg-pink-700">
-              Book Demo Class
-            </Button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -63,18 +60,15 @@ export function Header() {
             <button onClick={() => scrollToSection('courses')} className="text-gray-700 hover:text-pink-600 transition-colors text-left">
               Courses
             </button>
-            <button onClick={() => scrollToSection('pricing')} className="text-gray-700 hover:text-pink-600 transition-colors text-left">
-              Pricing
+            <button onClick={() => scrollToSection('plans')} className="text-gray-700 hover:text-pink-600 transition-colors text-left">
+              Plans
             </button>
             <button onClick={() => scrollToSection('blog')} className="text-gray-700 hover:text-pink-600 transition-colors text-left">
-              Articles
+              Blog
             </button>
             <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-pink-600 transition-colors text-left">
               Contact
             </button>
-            <Button onClick={() => scrollToSection('pricing')} className="bg-pink-600 hover:bg-pink-700 w-full">
-              Book Demo Class
-            </Button>
           </nav>
         )}
       </div>

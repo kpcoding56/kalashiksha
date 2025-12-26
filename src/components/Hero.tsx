@@ -38,8 +38,8 @@ export function Hero() {
               </p>
             </div>
             <div className="flex flex-wrap gap-4 pt-4">
-              <Button onClick={() => scrollToSection('pricing')} className="bg-pink-600 hover:bg-pink-700">
-                🎶 Book a Demo Class
+              <Button onClick={() => scrollToSection('plans')} className="bg-pink-600 hover:bg-pink-700">
+                🎶 Register Now
               </Button>
               <Button onClick={() => scrollToSection('courses')} variant="outline" className="border-pink-600 text-pink-600 hover:bg-pink-50">
                 🪷 Explore Courses

@@ -2,7 +2,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
 import { Courses } from './components/Courses';
-import { Pricing } from './components/Pricing';
+import { Plans } from './components/Plans';
 import { Blog } from './components/Blog';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
@@ -15,7 +15,7 @@ export default function App() {
         <Hero />
         <About />
         <Courses />
-        <Pricing />
+        <Plans />
         <Blog />
         <Contact />
       </main>
