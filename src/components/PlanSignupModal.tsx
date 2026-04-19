@@ -23,6 +23,28 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
   const [mobile, setMobile] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [sent, setSent] = useState<boolean>(false);
+  const [course, setCourse] = useState<string>("Voice & Expression");
+  const [planOption, setPlanOption] = useState<string>(selectedPlan ?? "Demo Class");
+  const [pack, setPack] = useState<string>(pace ?? "Regular");
+
+  useEffect(() => {
+    if (selectedPlan) setPlanOption(selectedPlan);
+    if (pace) setPack(pace);
+  }, [selectedPlan, pace]);
+
+  // Reset form when the modal closes (or when selected defaults change)
+  useEffect(() => {
+    if (!open) {
+      setName("");
+      setEmail("");
+      setMobile("");
+      setEmailError("");
+      setCourse("Voice & Expression");
+      setPlanOption(selectedPlan ?? "Demo Class");
+      setPack(pace ?? "Regular");
+      setSent(false);
+    }
+  }, [open, selectedPlan, pace]);
 
   useEffect(() => {
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_EMAILJS_USER;
@@ -39,19 +61,26 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
       setEmailError("Please enter a valid email address");
       return;
     }
+    // show thank-you immediately for better UX
+    setSent(true);
 
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_EMAILJS_USER;
 
-    const message = `Mobile: ${mobile || ''}\nPlan: ${selectedPlan ?? pace ?? ''}`;
+    const message = `Course: ${course || ''}\nPlan: ${planOption || ''}\nPack: ${pack || ''}\nMobile: ${mobile || ''}`;
 
     const templateParams = {
       from_name: name || "Website Visitor",
       from_email: email,
       message: message,
+      message_html: message,
+      notes: message,
+      course: course || "",
+      plan_option: planOption || "",
+      pack: pack || "",
       mobile: mobile || "",
-      plan: selectedPlan ?? pace ?? "",
+      plan: planOption || "",
     } as Record<string, string>;
 
     console.log('PlanSignup EmailJS params', { serviceId, templateId, publicKey, templateParams });
@@ -59,12 +88,11 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
     if (serviceId && templateId && publicKey) {
       try {
         await send(serviceId, templateId, templateParams, publicKey);
-        setSent(true);
-        // keep modal open briefly to show thank you, then close
+        // close shortly after showing thank-you
         setTimeout(() => {
           setSent(false);
           onOpenChange(false);
-        }, 1800);
+        }, 700);
         return;
       } catch (err) {
         console.error('EmailJS send error', err);
@@ -78,22 +106,22 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
     const bodyLines: string[] = [];
     bodyLines.push(`Name: ${templateParams.from_name}`);
     bodyLines.push(`Email: ${templateParams.from_email}`);
+    bodyLines.push(`Course: ${templateParams.course || ''}`);
+    bodyLines.push(`Plan: ${templateParams.plan_option || templateParams.plan || ''}`);
+    bodyLines.push(`Pack: ${templateParams.pack || ''}`);
     bodyLines.push(`Mobile: ${templateParams.mobile}`);
-    bodyLines.push('');
-    bodyLines.push(`Plan: ${templateParams.plan}`);
     bodyLines.push('');
     bodyLines.push('— Sent from Kalashiksha website');
 
     const bodyText = bodyLines.join('\n');
     const body = encodeURIComponent(bodyText);
     const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${body}`;
-    // show thank-you briefly then open mail client
-    setSent(true);
+    // open mail client quickly after showing thank-you
     setTimeout(() => {
       window.location.href = mailto;
       setSent(false);
       onOpenChange(false);
-    }, 600);
+    }, 300);
   };
 
   return createPortal(
@@ -108,8 +136,41 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
           ) : (
             <>
               <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Plan Signup</h2>
-              <p style={{ color: "#4b5563", marginBottom: 16 }}>{selectedPlan ?? pace ?? ""}</p>
+              <p style={{ color: "#4b5563", marginBottom: 16 }}>{planOption} — {pack}</p>
               <form onSubmit={(e) => { e.preventDefault(); }} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Course</label>
+                  <select value={course} onChange={(e) => setCourse(e.target.value)} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white">
+                    <option>Voice & Expression</option>
+                    <option>Story-Singing</option>
+                    <option>Writing Through Music</option>
+                    <option>Kalashiksha Kids</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Plan</label>
+                  <select value={planOption} onChange={(e) => setPlanOption(e.target.value)} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white">
+                    <option>Demo Class</option>
+                    <option>4-Class Pack</option>
+                    <option>10-Class Pack</option>
+                    <option>20-Class Pack</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Pack</label>
+                  <div className="mt-2 flex items-center gap-4">
+                    <label className="inline-flex items-center">
+                      <input type="radio" name="pack" value="Regular" checked={pack === 'Regular'} onChange={() => setPack('Regular')} className="form-radio h-4 w-4 text-pink-600 border-gray-300" />
+                      <span className="ml-2">Regular</span>
+                    </label>
+                    <label className="inline-flex items-center">
+                      <input type="radio" name="pack" value="Accelerated" checked={pack === 'Accelerated'} onChange={() => setPack('Accelerated')} className="form-radio h-4 w-4 text-pink-600 border-gray-300" />
+                      <span className="ml-2">Accelerated</span>
+                    </label>
+                  </div>
+                </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Name</label>
               <input
@@ -119,7 +180,7 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white"
               />
             </div>
 
@@ -132,7 +193,7 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white"
               />
             </div>
 
@@ -145,7 +206,7 @@ export default function PlanSignupModal({ open, onOpenChange, selectedPlan, pace
                 inputMode="tel"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white"
               />
             </div>
 

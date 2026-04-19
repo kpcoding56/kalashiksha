@@ -25,14 +25,29 @@ export function Contact() {
       return;
     }
 
+    // Capture current values so we can clear the UI immediately
+    const currentName = name;
+    const currentEmail = email;
+    const currentMessage = message;
+
+    // Clear form immediately to avoid perceived lag
+    setName('');
+    setEmail('');
+    setMessage('');
+    setEmailError('');
+
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_EMAILJS_USER;
 
     const templateParams = {
-      from_name: name || 'Website Visitor',
-      from_email: email,
-      message: message || '',
+      from_name: currentName || 'Website Visitor',
+      from_email: currentEmail,
+      message: currentMessage || '',
+      message_html: currentMessage || '',
+      notes: currentMessage || '',
+      mobile: '',
+      plan: '',
     };
 
     console.log('EmailJS params', { serviceId, templateId, publicKey, templateParams });
@@ -52,13 +67,13 @@ export function Contact() {
 
     // Fallback to mailto if EmailJS is not configured
     const to = 'kalaashiksha@gmail.com';
-    const subject = `Contact from ${name || 'Website Visitor'}`;
+    const subject = `Contact from ${currentName || 'Website Visitor'}`;
     const bodyLines = [] as string[];
-    bodyLines.push(`Name: ${name || ''}`);
-    bodyLines.push(`Email: ${email}`);
+    bodyLines.push(`Name: ${currentName || ''}`);
+    bodyLines.push(`Email: ${currentEmail}`);
     bodyLines.push('');
     bodyLines.push('Message:');
-    bodyLines.push(message || '');
+    bodyLines.push(currentMessage || '');
     bodyLines.push('');
     bodyLines.push('— Sent from Kalashiksha website');
 
@@ -75,7 +90,13 @@ export function Contact() {
 
   useEffect(() => {
     if (!sent) return;
-    const t = setTimeout(() => setSent(false), 4000);
+    const t = setTimeout(() => {
+      setSent(false);
+      setName('');
+      setEmail('');
+      setMessage('');
+      setEmailError('');
+    }, 4000);
     return () => clearTimeout(t);
   }, [sent]);
 
