@@ -3,12 +3,7 @@ import { Button } from './ui/button';
 import { Mic, BookOpen, PenTool, Baby } from 'lucide-react';
 
 export function Courses() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  
 
   const courses = [
     {
@@ -69,7 +64,7 @@ export function Courses() {
             {courses.map((course, index) => {
               const Icon = course.icon;
               return (
-                <Card key={index} className="p-8 border-pink-100 hover:shadow-xl transition-all hover:-translate-y-1">
+                <Card key={index} className="p-8 border-pink-100 bg-white">
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-14 h-14 rounded-full bg-${course.color}-100 flex items-center justify-center`}>
@@ -104,13 +99,12 @@ export function Courses() {
               All classes are online (Zoom/Google Meet). Each session is 45 minutes.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button onClick={() => scrollToSection('plans')} className="bg-pink-600 hover:bg-pink-700">
-                👉 Book a Free Demo
-              </Button>
-              <Button onClick={() => scrollToSection('plans')} variant="outline" className="border-pink-600 text-pink-600 hover:bg-pink-50">
-                Register Now
-              </Button>
-            </div>
+                <Button onClick={() => {
+                  window.dispatchEvent(new CustomEvent('openPlanSignup', { detail: { plan: 'Course Registration', pace: 'Regular' } }));
+                }} variant="outline" className="border-pink-600 text-pink-600">
+                  Register Now
+                </Button>
+              </div>
           </div>
         </div>
       </div>
